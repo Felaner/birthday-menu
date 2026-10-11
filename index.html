@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Меню на 25-летие</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: одна колонка ~760px, липкие вкладки разделов, рецепты — раскрывающиеся карточки с отмечаемыми ингредиентами и шагами */
+:root{
+  --bg:#F2F4F1; --surface:#FFFFFF; --ink:#1B2420; --muted:#5B6862; --line:#D9E0DB;
+  --accent:#B0245A; --accent-soft:#F7E3EA;
+  --herb:#2E7A57; --herb-soft:#E1F0E8;
+  --amber:#9A6206; --amber-soft:#FBEFD6;
+  --font-display:"Unbounded", "Arial Black", system-ui, sans-serif;
+  --font-body:"Onest", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono:"JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121815; --surface:#1A221E; --ink:#E7EDE9; --muted:#9BA9A2; --line:#2B3530;
+    --accent:#F06D9C; --accent-soft:#3A1E29;
+    --herb:#62C394; --herb-soft:#1A3328;
+    --amber:#E7B356; --amber-soft:#3A2D14;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121815; --surface:#1A221E; --ink:#E7EDE9; --muted:#9BA9A2; --line:#2B3530;
+  --accent:#F06D9C; --accent-soft:#3A1E29;
+  --herb:#62C394; --herb-soft:#1A3328;
+  --amber:#E7B356; --amber-soft:#3A2D14;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.55;padding-inline:16px;padding-block:0 64px}
+.wrap{max-width:760px;margin:0 auto}
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:1.15}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+/* hero */
+.hero{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center;padding-block:32px 24px}
+.age{font-family:var(--font-display);font-weight:800;font-size:clamp(76px,22vw,128px);line-height:.85;color:var(--accent);letter-spacing:-.04em}
+.hero h1{font-size:clamp(22px,5vw,32px);font-weight:700}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.pill{font-size:13px;padding:3px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:var(--surface)}
+
+/* tabs */
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);margin-inline:-16px;padding:10px 16px;border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.tabs a{flex:0 0 auto;text-decoration:none;font-weight:600;font-size:14px;padding:7px 14px;border-radius:999px;background:var(--surface);border:1px solid var(--line)}
+.tabs a:hover{border-color:var(--accent);color:var(--accent)}
+
+section{padding-top:36px;scroll-margin-top:60px}
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.sec-head h2{font-size:24px;font-weight:700}
+.sec-note{color:var(--muted);font-size:14px;margin:0}
+.label{font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;color:var(--muted);margin:0 0 8px}
+
+/* menu */
+.menu-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 32px}
+@media (max-width:560px){.menu-grid{grid-template-columns:1fr}}
+.menu-group ol{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.menu-group li{border-bottom:1px solid var(--line)}
+.menu-group a{display:flex;gap:12px;align-items:baseline;padding:9px 0;text-decoration:none}
+.menu-group a:hover .dish{color:var(--accent)}
+.num{font-family:var(--font-mono);font-size:12px;color:var(--muted);min-width:20px;font-variant-numeric:tabular-nums}
+.dish{font-weight:500}
+.kids{margin-top:28px;padding:16px 18px;border-radius:12px;background:var(--herb-soft)}
+.kids h3{font-size:15px;margin-bottom:8px;color:var(--herb)}
+.kids ul{margin:0;padding-left:18px;display:grid;gap:4px}
+
+/* checklists */
+.check{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.check input{appearance:none;flex:0 0 auto;width:20px;height:20px;margin:2px 0 0;border:2px solid var(--line);border-radius:6px;background:var(--surface);display:grid;place-items:center;cursor:pointer}
+.check input:checked{background:var(--herb);border-color:var(--herb)}
+.check input:checked::after{content:"";width:5px;height:10px;border:solid var(--surface);border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg)}
+.check .name{flex:1;min-width:0}
+.check .qty{font-family:var(--font-mono);font-size:13px;color:var(--muted);text-align:right;white-space:nowrap}
+.check:has(input:checked) .name,.check:has(input:checked) .qty{text-decoration:line-through;color:var(--muted)}
+.shop-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 32px}
+@media (max-width:620px){.shop-cols{grid-template-columns:1fr}}
+.shop-block .label{margin-bottom:2px}
+.progress{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.bar{flex:1;height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar span{display:block;height:100%;width:0;background:var(--herb);transition:width .25s}
+.count{font-family:var(--font-mono);font-size:13px;font-variant-numeric:tabular-nums;color:var(--muted)}
+.btn{font:inherit;font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.btn:hover{color:var(--accent);border-color:var(--accent)}
+.btn.warn{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+.home-note{margin-top:20px;font-size:14px;color:var(--muted)}
+
+/* recipes */
+.recipe-group{margin-top:24px}
+.recipe-group > .label{margin-bottom:10px}
+details.recipe{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-bottom:10px;scroll-margin-top:70px}
+details.recipe[open]{border-color:var(--accent)}
+summary{list-style:none;cursor:pointer;padding:14px 16px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary .num{font-size:13px}
+summary h3{font-size:16px;font-weight:500}
+summary .yield{display:block;font-family:var(--font-body);font-size:13px;color:var(--muted);margin-top:2px;font-weight:400}
+.chev{width:10px;height:10px;border:solid var(--muted);border-width:0 2px 2px 0;transform:rotate(45deg);transition:transform .2s;margin-right:4px}
+details[open] .chev{transform:rotate(-135deg)}
+.r-body{padding:0 16px 18px;display:grid;gap:18px}
+.when{display:inline-flex;font-size:13px;font-weight:600;padding:4px 10px;border-radius:8px;justify-self:start}
+.when.today{background:var(--accent-soft);color:var(--accent)}
+.when.day{background:var(--amber-soft);color:var(--amber)}
+.when.serve{background:var(--herb-soft);color:var(--herb)}
+.ing-sub{font-weight:600;font-size:14px;margin:10px 0 0}
+.steps{list-style:none;margin:0;padding:0;counter-reset:s;display:grid;gap:2px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:28px 1fr;gap:8px;padding:8px 6px;border-radius:8px;cursor:pointer}
+.steps li::before{content:counter(s);font-family:var(--font-mono);font-size:13px;color:var(--accent);padding-top:2px}
+.steps li:hover{background:var(--bg)}
+.steps li.done{color:var(--muted);text-decoration:line-through}
+.steps li.done::before{color:var(--herb)}
+.layers{margin:6px 0 0;padding-left:16px;display:grid;gap:2px}
+.tip{font-size:14px;padding:10px 14px;border-left:3px solid var(--amber);background:var(--amber-soft);border-radius:0 8px 8px 0}
+.hint{font-size:13px;color:var(--muted);margin:0}
+
+/* plan */
+.plan-today{margin-bottom:28px}
+.timeline{display:grid}
+.tl{display:grid;grid-template-columns:64px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);cursor:pointer;align-items:start}
+.tl time{font-family:var(--font-mono);font-weight:500;color:var(--accent);font-variant-numeric:tabular-nums}
+.tl.done{color:var(--muted)}
+.tl.done span{text-decoration:line-through}
+.tl.done time{color:var(--herb)}
+.tl.final time,.tl.final span{font-weight:700}
+footer{margin-top:48px;color:var(--muted);font-size:13px;text-align:center}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="age" aria-hidden="true">25</div>
+    <div>
+      <h1>Меню на день рождения</h1>
+      <div class="meta">
+        <span class="pill">12 октября</span>
+        <span class="pill">12–14 гостей</span>
+        <span class="pill">гости к 17:00</span>
+        <span class="pill">мангал · духовка · аэрогриль</span>
+      </div>
+    </div>
+  </header>
+</div>
+
+<nav class="tabs" aria-label="Разделы">
+  <div class="wrap">
+    <a href="#menu">Меню</a>
+    <a href="#plan">План</a>
+    <a href="#recipes">Рецепты</a>
+    <a href="#shop">Покупки</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <section id="menu">
+    <div class="sec-head"><h2>Меню</h2><p class="sec-note">Нажмите на блюдо, чтобы открыть рецепт</p></div>
+    <div class="menu-grid" id="menuGrid"></div>
+    <div class="kids">
+      <h3>Детям: 3 года и 1 год</h3>
+      <ul>
+        <li>3 года: кусочки шашлыка без лука, свежие огурцы, простые блины, брускетта без чеснока. Моцареллу и черри резать на четвертинки, без шпажки.</li>
+        <li>1 год: привычная еда. Со стола подойдёт мелко размятое мясо без специй, банан, мягкое яблоко.</li>
+        <li>Не давать малышам: морепродукты, сельдь, грибы, салями, оливки, майонезные салаты, шпажки.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="plan">
+    <div class="sec-head"><h2>План готовки</h2><p class="sec-note">Нажмите на пункт, чтобы отметить</p></div>
+    <div class="plan-today">
+      <p class="label">Сегодня вечером</p>
+      <div id="planToday"></div>
+    </div>
+    <p class="label">Завтра</p>
+    <div class="timeline" id="timeline"></div>
+  </section>
+
+  <section id="recipes">
+    <div class="sec-head"><h2>Рецепты</h2><p class="sec-note">Ингредиенты и шаги можно отмечать по ходу</p></div>
+    <div id="recipeList"></div>
+  </section>
+
+  <section id="shop">
+    <div class="sec-head"><h2>Покупки</h2><button class="btn" id="resetBtn" type="button">Сбросить все отметки</button></div>
+    <div class="progress"><div class="bar"><span id="shopBar"></span></div><span class="count" id="shopCount">0 / 0</span></div>
+    <div class="shop-cols" id="shopCols"></div>
+    <p class="home-note">Есть дома: репчатый лук (~1,6 кг), картофель (6 шт), свёкла (3 шт), чеснок (2 головки), болгарский перец (2 шт), укроп, петрушка, зелёный лук, сливочное масло (~160 г), мука, растительное масло, уксус, горчица, специи, уголь.</p>
+  </section>
+
+  <footer>С днём рождения!</footer>
+</main>
+
+<script>
+const groups = [
+  {title:"Горячее", items:["shashlyk"]},
+  {title:"Закуски", items:["tartlets","lavash","blini","shrimp","mushrooms","eggs","bruschetta"]},
+  {title:"Канапе", items:["c-herring","c-caprese","c-salami"]},
+  {title:"Салаты", items:["s-fresh","s-caesar","s-squid","s-mimosa","s-shuba"]}
+];
+
+const R = {
+  shashlyk:{name:"Шашлык из свиной шеи", yield:"3,5 кг мяса", tone:"today", when:"Маринад сегодня вечером, жарить завтра",
+    ing:[["Свиная шея","3,5 кг"],["Лук репчатый","1,2 кг"],["Соль","2,5 ст. л."],["Чёрный молотый перец","1 ч. л."],["Кориандр молотый","1 ч. л."],["Растительное масло","3 ст. л."]],
+    steps:["Нарежьте мясо кусками 4–5 см.","Нарежьте лук кольцами. Половину лука сильно помните руками с солью, пока не даст сок.","Смешайте мясо со всем луком, перцем, кориандром и маслом. Перемешайте руками 2–3 минуты.","Накройте и уберите в холодильник на 8–14 часов.","Нанизайте на шампуры, лук с мяса стряхните. Жарьте на ровных углях без огня 15–20 минут, переворачивая каждые 3–4 минуты.","Готовность: при надрезе выходит прозрачный сок, внутри нет розового."],
+    tip:"Если угли вспыхивают от капающего жира, сбрызните их водой из бутылки."},
+  tartlets:{name:"Тарталетки с курицей, грибами и сыром", yield:"~40 шт, подаются тёплыми", tone:"today", when:"Начинка сегодня, запекать перед подачей",
+    ing:[["Тарталетки","2 упаковки"],["Куриное филе","400 г"],["Шампиньоны","400 г"],["Лук репчатый","1 шт"],["Сливки 20%","200 мл"],["Твёрдый сыр","150 г"],["Сливочное масло","30 г"],["Мука","1 ст. л."],["Мускатный орех","щепотка"],["Соль, перец","по вкусу"]],
+    steps:["Отварите филе в подсоленной воде 15–20 минут. Остудите и нарежьте мелким кубиком.","Мелко нарежьте лук и грибы. Обжарьте на сливочном масле 10–12 минут, пока не уйдёт вся жидкость.","Посыпьте мукой, перемешайте и жарьте ещё минуту.","Влейте сливки и прогрейте, помешивая, 2–3 минуты до густоты.","Добавьте курицу, соль, перец и мускатный орех. Остудите и уберите в холодильник.","Завтра разложите начинку по тарталеткам и посыпьте тёртым сыром.","Запекайте 7–10 минут при 180 °C в духовке или 5–6 минут в аэрогриле, пока сыр не расплавится."]},
+  lavash:{name:"Рулеты из лаваша", yield:"~35 кусочков", tone:"today", when:"Сегодня вечером, чтобы постояли ночь",
+    ing:[["Лаваш тонкий","3 листа"],["Творожный сыр","400 г"],["Ветчина","300 г"],["Огурцы","2 шт"],["Укроп","½ пучка"],["Чеснок","1 зубчик"]],
+    steps:["Смешайте творожный сыр с рубленым укропом и давленым чесноком.","Тонко смажьте лаваш сыром до краёв.","Выложите ветчину ровным слоем, сверху огурец тонкой соломкой.","Плотно сверните рулетом и заверните в плёнку. Повторите с остальными листами.","Уберите в холодильник минимум на 3 часа, лучше на ночь.","Перед подачей нарежьте острым ножом кусочками по 2–3 см."]},
+  blini:{name:"Рулетики из блинов с сёмгой", yield:"~40 кусочков", tone:"today", when:"Сегодня вечером",
+    ing:[{h:"Блины, ~12 шт"},["Молоко","500 мл"],["Яйца","2 шт"],["Мука","200 г"],["Сахар","1 ч. л."],["Соль","щепотка"],["Растительное масло","2 ст. л."],{h:"Начинка"},["Сёмга или форель слабосолёная","250 г"],["Творожный сыр","250 г"],["Огурец","1 шт"],["Укроп","½ пучка"]],
+    steps:["Взбейте яйца с сахаром и солью, влейте половину молока.","Постепенно вмешайте муку до гладкости, затем остальное молоко и масло. Дайте тесту постоять 15 минут.","Испеките тонкие блины на смазанной горячей сковороде, по 1 минуте с каждой стороны. Остудите.","Смешайте творожный сыр с рубленым укропом.","Смажьте блин сыром, у одного края выложите тонкие полоски рыбы и соломку огурца.","Плотно сверните, заверните в плёнку и уберите в холодильник минимум на 1–2 часа.","Перед подачей нарежьте наискосок кусочками 2–3 см."],
+    tip:"Испеките 3–4 лишних блина для 3-летки."},
+  shrimp:{name:"Креветки на гриле", yield:"1 кг", tone:"serve", when:"Завтра: маринад за 30 минут до жарки",
+    ing:[["Креветки сыромороженые неочищенные","1 кг"],["Лимон","1 шт"],["Чеснок","4 зубчика"],["Растительное масло","4 ст. л."],["Паприка сладкая","1 ч. л."],["Петрушка","½ пучка"],["Соль","по вкусу"]],
+    steps:["Разморозьте креветки в холодильнике или под холодной водой и обсушите полотенцем.","Смешайте масло, давленый чеснок, цедру лимона, сок половины лимона, паприку и соль. Вторая половина сока пойдёт в «Цезарь».","Залейте креветки маринадом на 20–30 минут, не дольше.","Нанизайте на шпажки или шампуры либо выложите на решётку.","Жарьте на сильных углях по 2 минуты с каждой стороны, пока не порозовеют.","Посыпьте рубленой петрушкой."]},
+  mushrooms:{name:"Шампиньоны, фаршированные сыром", yield:"1 кг крупных грибов", tone:"day", when:"Начинить днём, жарить перед подачей",
+    ing:[["Шампиньоны крупные","1 кг"],["Твёрдый сыр","150 г"],["Чеснок","2 зубчика"],["Укроп","½ пучка"],["Сливочное масло","30 г"],["Соль","по вкусу"]],
+    steps:["Аккуратно выкрутите ножки из шляпок.","Ножки мелко порубите и обжарьте на сливочном масле с чесноком 5 минут. Посолите и остудите.","Смешайте с тёртым сыром и укропом.","Наполните шляпки начинкой с горкой.","Выложите на решётку начинкой вверх и жарьте над углями 8–10 минут, пока шляпки не пустят сок и сыр не расплавится. В аэрогриле: 180 °C, 10 минут."]},
+  eggs:{name:"Яйца с печенью трески", yield:"24 половинки", tone:"today", when:"Сегодня вечером",
+    ing:[["Яйца","12 шт"],["Печень трески","1 банка"],["Майонез","1–2 ст. л."],["Зелёный лук","½ пучка"]],
+    steps:["Отварите яйца 10 минут после закипания и сразу переложите в холодную воду.","Очистите, разрежьте вдоль пополам и выньте желтки.","Слейте масло из банки. Разомните печень вилкой с желтками и майонезом.","Добавьте мелко нарезанный зелёный лук.","Наполните белки начинкой ложкой или кондитерским мешком.","Храните под плёнкой в холодильнике."]},
+  bruschetta:{name:"Брускетты с помидорами", yield:"~25 шт", tone:"serve", when:"Хлеб подсушить днём, собирать перед подачей",
+    ing:[["Багет","2 шт"],["Помидоры","600 г"],["Базилик","1 пучок"],["Чеснок","2 зубчика"],["Растительное или оливковое масло","3 ст. л."],["Соль, перец","по вкусу"]],
+    steps:["Нарежьте багет наискосок ломтиками толщиной 1 см.","Подсушите в аэрогриле (180 °C, 4–5 минут) или на решётке над углями до хруста.","Натрите каждый ломтик срезом зубчика чеснока.","Нарежьте помидоры мелким кубиком, удалив водянистую середину с семенами.","Смешайте с порванным базиликом, маслом, солью и перцем.","Выложите на хлеб прямо перед подачей."]},
+  "c-herring":{name:"Канапе с сельдью", yield:"~30 шт", tone:"day", when:"Завтра днём",
+    ing:[["Филе сельди","400 г"],["Бородинский хлеб","1 буханка"],["Сливочное масло","100 г"],["Красный лук","1 шт"],["Уксус 9%","1 ст. л."],["Укроп","½ пучка"],["Шпажки","30 шт"]],
+    steps:["Нарежьте лук тонкими полукольцами. Залейте уксусом с 3 ст. л. воды на 10 минут, потом отожмите.","Срежьте с хлеба корки и нарежьте квадратиками 4×4 см.","Смажьте хлеб мягким сливочным маслом.","Нарежьте сельдь кусочками по размеру хлеба.","Соберите: хлеб, сельдь, несколько полуколец лука, веточка укропа. Скрепите шпажкой."]},
+  "c-caprese":{name:"Канапе «Капрезе»", yield:"~30 шт", tone:"serve", when:"За час до гостей",
+    ing:[["Мини-моцарелла","250 г"],["Черри","300 г"],["Базилик","1 пучок"],["Растительное или оливковое масло","2 ст. л."],["Соль, чёрный перец","по вкусу"],["Шпажки","30 шт"]],
+    steps:["Слейте рассол с моцареллы и обсушите шарики.","Нанизайте на шпажку черри, сложенный пополам лист базилика и шарик моцареллы.","Выложите на блюдо, сбрызните маслом, слегка посолите и поперчите.","Держите в холодильнике до подачи."]},
+  "c-salami":{name:"Канапе с салями", yield:"~30 шт", tone:"day", when:"Завтра днём",
+    ing:[["Салями тонкой нарезки","200 г"],["Твёрдый сыр","150 г"],["Оливки без косточек","1 банка"],["Огурец","1 шт"],["Шпажки","30 шт"]],
+    steps:["Нарежьте сыр кубиками 1,5 см, это основание канапе.","Нарежьте огурец кружками толщиной 5 мм.","Нанизайте сверху вниз: оливка, ломтик салями «гармошкой», кружок огурца, кубик сыра.","Держите под плёнкой в холодильнике."]},
+  "s-fresh":{name:"Свежий овощной салат", yield:"большое блюдо", tone:"serve", when:"Нарезать днём, заправить перед подачей",
+    ing:[["Помидоры","1 кг"],["Огурцы","1 кг"],["Болгарский перец","2 шт"],["Красный лук","1 шт"],["Петрушка или укроп","½ пучка"],["Растительное масло","3 ст. л."],["Соль","по вкусу"]],
+    steps:["Нарежьте помидоры и огурцы дольками, перец соломкой, лук тонкими полукольцами.","Добавьте рубленую зелень.","Посолите и заправьте маслом прямо перед подачей, иначе помидоры дадут много сока."]},
+  "s-caesar":{name:"«Цезарь» с курицей", yield:"большое блюдо", tone:"serve", when:"Соус сегодня, собирать перед подачей",
+    ing:[["Куриное филе","600 г"],["Салат романо или айсберг","2 кочана"],["Черри","250 г"],["Твёрдый сыр","130 г"],["Батон","½ шт"],["Чеснок","2 зубчика"],["Растительное масло","3 ст. л."],["Соль, перец","по вкусу"],{h:"Соус"},["Майонез","4 ст. л."],["Горчица","1 ч. л."],["Лимонный сок","1 ст. л."],["Тёртый сыр (из 130 г)","30 г"]],
+    steps:["Соус: смешайте майонез, горчицу, 1 давленый зубчик чеснока, лимонный сок и 30 г тёртого сыра. Уберите в холодильник.","Курица: натрите филе солью, перцем и 1 ст. л. масла. Аэрогриль 180 °C, 18–20 минут, или сковорода по 6–7 минут с каждой стороны. Остудите и нарежьте полосками.","Сухарики: батон кубиками 1,5 см смешайте с 2 ст. л. масла и вторым зубчиком чеснока. Аэрогриль 180 °C, 5–7 минут.","Сборка: порвите салат руками на блюдо, сверху курица и половинки черри, полейте соусом, посыпьте сыром и сухариками."]},
+  "s-squid":{name:"Салат с кальмаром", yield:"средняя миска", tone:"day", when:"Завтра днём",
+    ing:[["Кальмар (тушки)","500 г"],["Яйца","4 шт"],["Огурцы","2 шт"],["Лук репчатый","1 шт"],["Уксус 9%","1 ст. л."],["Майонез","3–4 ст. л."],["Соль, перец","по вкусу"]],
+    steps:["Если тушки не очищены, обдайте их кипятком и снимите плёнку.","Опустите кальмар в кипящую подсоленную воду на 1–1,5 минуты, не дольше, иначе станет резиновым. Остудите.","Отварите яйца 10 минут.","Нарежьте лук тонкими полукольцами, залейте уксусом с 3 ст. л. воды на 10 минут и отожмите.","Нарежьте кальмар, яйца и огурцы соломкой.","Смешайте, посолите, поперчите и заправьте майонезом."]},
+  "s-mimosa":{name:"«Мимоза»", yield:"большое блюдо", tone:"today", when:"Сегодня вечером, пропитается за ночь",
+    ing:[["Сайра в масле","2 банки"],["Картофель","3 шт"],["Морковь","2 шт"],["Яйца","4 шт"],["Лук репчатый (или ½ пучка зелёного)","1 шт"],["Твёрдый сыр","100 г"],["Майонез","200 г"]],
+    steps:["Отварите картофель и морковь в кожуре 20–25 минут, яйца 10 минут. Остудите и очистите.","Отделите белки от желтков.","Слейте масло с сайры, выньте крупные кости и разомните рыбу вилкой.","Мелко нарежьте лук и обдайте кипятком, чтобы не горчил.",
+      {layers:["тёртый картофель","сайра","лук, майонез","тёртая морковь, майонез","тёртые белки","тёртый сыр, майонез","желтки на мелкой тёрке сверху"], text:"Выкладывайте слоями на блюдо или в разъёмное кольцо:"},
+      "Уберите в холодильник на ночь."]},
+  "s-shuba":{name:"Сельдь под шубой", yield:"большое блюдо", tone:"today", when:"Сегодня вечером, пропитается за ночь",
+    ing:[["Филе сельди","400 г"],["Свёкла","3 шт"],["Картофель","3 шт"],["Морковь","2 шт"],["Лук репчатый","1 шт"],["Яблоко кислое","1 шт"],["Майонез","250 г"]],
+    steps:["Отварите свёклу 1–1,5 часа (или запеките в фольге 50–60 минут при 200 °C), картофель и морковь 20–25 минут. Остудите и очистите.","Нарежьте сельдь мелким кубиком.","Мелко нарежьте лук и обдайте кипятком.",
+      {layers:["тёртый картофель","сельдь","лук, майонез","тёртое яблоко","тёртая морковь, майонез","тёртая свёкла, майонез сверху"], text:"Выкладывайте слоями:"},
+      "Уберите в холодильник на ночь."]}
+};
+
+const planToday = [
+  "Поставить вариться свёклу (она дольше всех), 6 картофелин, 4 моркови и 20 яиц",
+  "Замариновать шашлык",
+  "Сделать начинку для тарталеток",
+  "Испечь блины и собрать рулетики с сёмгой",
+  "Сделать рулеты из лаваша",
+  "Собрать «Мимозу», шубу и яйца с печенью трески",
+  "Сделать соус для «Цезаря»"
+];
+const timeline = [
+  ["12:00","Отварить кальмара. Курица и сухарики для «Цезаря»"],
+  ["13:00","Салат с кальмаром. Нарезать овощи для свежего салата. Канапе с салями"],
+  ["14:00","Начинить грибы. Подсушить хлеб для брускетт. Канапе с сельдью"],
+  ["15:00","Разжечь мангал"],
+  ["15:45","Креветки в маринад"],
+  ["16:00","Шашлык на угли. Канапе «Капрезе». Нарезать рулеты из лаваша и блинов"],
+  ["16:30","Грибы и креветки на решётку. Наполнить тарталетки, собрать брускетты"],
+  ["16:40","Тарталетки в духовку. Заправить «Цезарь» и овощной салат"],
+  ["17:00","Гости. С днём рождения!"]
+];
+
+const shop = [
+  {t:"Мясо и рыба", i:[["Свиная шея","3,5 кг"],["Куриное филе","1 кг"],["Креветки сыромороженые","1 кг"],["Кальмар (тушки)","500 г"],["Сёмга или форель с/с","250 г"],["Филе сельди","800 г"],["Ветчина","300 г"],["Салями","200 г"]]},
+  {t:"Консервы", i:[["Печень трески","1 банка"],["Сайра в масле","2 банки"],["Оливки без косточек","1 банка"]]},
+  {t:"Овощи и зелень", i:[["Огурцы","1,7 кг"],["Помидоры","1,6 кг"],["Черри","550 г"],["Шампиньоны (1 кг крупных + 400 г)","1,4 кг"],["Салат романо или айсберг","2 кочана"],["Морковь","4 шт"],["Красный лук","2 шт"],["Базилик","2 пучка"]]},
+  {t:"Молочное и яйца", i:[["Яйца","25 шт"],["Твёрдый сыр","700 г"],["Творожный сыр","650 г"],["Мини-моцарелла","250 г"],["Сливки 20%","200 мл"],["Молоко","0,5 л"],["Майонез","~650 г"]]},
+  {t:"Хлеб", i:[["Тарталетки","2 уп."],["Лаваш тонкий","3 листа"],["Багет","2 шт"],["Бородинский хлеб","1 шт"],["Батон","1 шт"]]},
+  {t:"Прочее", i:[["Мускатный орех",""],["Шпажки для канапе","100 шт"]]},
+  {t:"Фрукты и цитрусовые", i:[["Яблоки","1,5 кг"],["Бананы","1,5 кг"],["Апельсины (6 на стол + 2 для напитков)","~8 шт"],["Киви","10 шт"],["Лимоны","3 шт"],["Лаймы","2 шт"]]},
+  {t:"Напитки", i:[["Водка","0,5 л"],["Джин","0,5 л"],["Настойка абрикосовая","0,5 л"],["Лимончелло","0,5 л"],["«Черноголовка» лимонная","2 л"],["«Черноголовка» персик","1,5 л"],["Милкис","0,5 л"],["Ананасовый сок","1 л"]]}
+];
+
+/* storage */
+const KEY = "bd25-checks";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e) { state = {}; }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {} }
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+
+function checkRow(id, name, qty){
+  return `<label class="check" for="${id}"><input type="checkbox" id="${id}" data-k="${id}" ${state[id]?"checked":""}><span class="name">${esc(name)}</span><span class="qty">${esc(qty)}</span></label>`;
+}
+
+/* menu */
+let n = 0; const numOf = {};
+groups.forEach(g => g.items.forEach(id => numOf[id] = ++n));
+document.getElementById("menuGrid").innerHTML = groups.map(g => `
+  <div class="menu-group"><p class="label">${g.title}</p><ol>
+  ${g.items.map(id => `<li><a href="#r-${id}" data-open="${id}"><span class="num">${String(numOf[id]).padStart(2,"0")}</span><span class="dish">${esc(R[id].name)}</span></a></li>`).join("")}
+  </ol></div>`).join("");
+
+/* recipes */
+document.getElementById("recipeList").innerHTML = groups.map(g => `
+  <div class="recipe-group"><p class="label">${g.title}</p>
+  ${g.items.map(id => { const r = R[id]; let si = 0; return `
+    <details class="recipe" id="r-${id}">
+      <summary><span class="num">${String(numOf[id]).padStart(2,"0")}</span><h3>${esc(r.name)}<span class="yield">${esc(r.yield)}</span></h3><span class="chev"></span></summary>
+      <div class="r-body">
+        <span class="when ${r.tone}">${esc(r.when)}</span>
+        <div><p class="label">Продукты</p>
+          ${r.ing.map((x,i) => x.h ? `<p class="ing-sub">${esc(x.h)}</p>` : checkRow(`i-${id}-${i}`, x[0], x[1])).join("")}
+        </div>
+        <div><p class="label">Приготовление</p>
+          <ol class="steps">${r.steps.map(s => { const k = `s-${id}-${si++}`;
+            const body = typeof s === "string" ? esc(s) : `${esc(s.text)}<ol class="layers">${s.layers.map(l=>`<li>${esc(l)}</li>`).join("")}</ol>`;
+            return `<li data-k="${k}" class="${state[k]?"done":""}" tabindex="0">${`<span>${body}</span>`}</li>`; }).join("")}</ol>
+        </div>
+        ${r.tip ? `<div class="tip">${esc(r.tip)}</div>` : ""}
+      </div>
+    </details>`; }).join("")}
+  </div>`).join("");
+
+/* plan */
+document.getElementById("planToday").innerHTML = planToday.map((t,i) => checkRow(`p-today-${i}`, t, "")).join("");
+document.getElementById("timeline").innerHTML = timeline.map(([tm,t],i) => {
+  const k = `p-tl-${i}`;
+  return `<div class="tl ${state[k]?"done":""} ${i===timeline.length-1?"final":""}" data-k="${k}" tabindex="0"><time>${tm}</time><span>${esc(t)}</span></div>`;
+}).join("");
+
+/* shop */
+let shopIds = [];
+document.getElementById("shopCols").innerHTML = shop.map((b,bi) => `
+  <div class="shop-block"><p class="label">${b.t}</p>
+  ${b.i.map((x,i) => { const id = `b-${bi}-${i}`; shopIds.push(id); return checkRow(id, x[0], x[1]); }).join("")}
+  </div>`).join("");
+function updateShop(){
+  const done = shopIds.filter(id => state[id]).length;
+  document.getElementById("shopCount").textContent = `${done} / ${shopIds.length}`;
+  document.getElementById("shopBar").style.width = (done / shopIds.length * 100) + "%";
+}
+updateShop();
+
+/* interactions */
+document.addEventListener("change", e => {
+  const k = e.target.dataset && e.target.dataset.k;
+  if (!k) return;
+  state[k] = e.target.checked; save(); updateShop();
+});
+function toggleRow(el){
+  const k = el.dataset.k; state[k] = !state[k];
+  el.classList.toggle("done", state[k]); save();
+}
+document.addEventListener("click", e => {
+  const row = e.target.closest(".steps > li, .tl");
+  if (row) { toggleRow(row); return; }
+  const link = e.target.closest("[data-open]");
+  if (link) { const d = document.getElementById("r-" + link.dataset.open); if (d) d.open = true; }
+});
+document.addEventListener("keydown", e => {
+  if ((e.key === "Enter" || e.key === " ") && e.target.matches(".steps > li, .tl")) { e.preventDefault(); toggleRow(e.target); }
+});
+function openFromHash(){
+  const h = location.hash.slice(1);
+  if (h.startsWith("r-")) { const d = document.getElementById(h); if (d) { d.open = true; d.scrollIntoView(); } }
+}
+window.addEventListener("hashchange", openFromHash); openFromHash();
+
+const resetBtn = document.getElementById("resetBtn"); let armed = null;
+resetBtn.addEventListener("click", () => {
+  if (!armed) {
+    resetBtn.textContent = "Нажмите ещё раз, чтобы сбросить"; resetBtn.classList.add("warn");
+    armed = setTimeout(() => { armed = null; resetBtn.textContent = "Сбросить все отметки"; resetBtn.classList.remove("warn"); }, 3000);
+    return;
+  }
+  clearTimeout(armed); armed = null;
+  state = {}; save();
+  document.querySelectorAll("input[data-k]").forEach(i => i.checked = false);
+  document.querySelectorAll(".done").forEach(el => el.classList.remove("done"));
+  resetBtn.textContent = "Отметки сброшены"; resetBtn.classList.remove("warn");
+  setTimeout(() => resetBtn.textContent = "Сбросить все отметки", 2000);
+  updateShop();
+});
+</script>
+</body>
+</html>
